@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block body %}
+{% for image in images%}
+<div class="my-3">
+<img src="{{ url_for('get_image', file_id=image.id) }}"
+alt="Uploaded Image" style="width: 300px; height: 300px; object-fit:
+cover;">
+</div>
+{% endfor %}
+{% endblock %}

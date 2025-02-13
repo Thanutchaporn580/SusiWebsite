@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block body %}
+<ul class="nav justify-content-center" style="padding-top: 1em;">
+    <li class="nav-item">
+        <a class="btn btn-primary" href="{{ url_for('create_note')
+}}">Create</a>
+    </li>
+</ul>
+{% for note in notes %}
+<div class="card my-3">
+    <div class="card-body">
+        <h4 class="card-title">{{ note.title }}</h4>
+        <div class="card-text my-3">
+            {{ note.description }}
+        </div>
+        <div class="card-footer text-muted">
+            Tags:
+            {% for t in note.tags %}
+            <a href="{{ url_for('tags_view', tag_name=t.name) }}">{{
+                t.name }}</a>
+            {% if current_user.is_authenticated and
+            current_user.has_role("admin") %}
+            <div><a href="{{ url_for('update_note', tag_id=t.id) }}">edit
+                    note</a></div>
+            <div><a href="{{ url_for('update_tags', tag_id=t.id) }}">edit
+                    tags</a></div>
+            <div><a href="{{ url_for('delete_note', tag_id=t.id)
+}}">delete note</a></div>
+            <div><a href="{{ url_for('delete_tags', tag_id=t.id)
+}}">delete tags</a></div>
+            <div><a href="{{ url_for('delete', tag_id=t.id) }}">delete
+                    all</a></div>
+            {% endif %}
+            {% endfor %}
+            Last update: {{ note.updated_date }}
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

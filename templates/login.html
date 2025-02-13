@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block body %}
+<h3 class="my-2">Loing</h3>
+<form action="" method="POST">
+{{ form.hidden_tag() }}
+<div class="form-group my-3">
+{{ form.username.label }}
+{{ form.username(class_='form-control',value=form_name) }}
+</div>
+<div class="form-group my-3">
+{{ form.password.label }}
+{{ form.password(class_='form-control',value=form_name) }}
+</div>
+{% if request.args.get('error') %}
+<div>
+<p class="text-danger"> {{ request.args.get('error') }} </p>
+</div>
+{% endif %}
+<button type="submit" class="btn btn-primary">Update</button>
+</form>
+{% endblock %}
