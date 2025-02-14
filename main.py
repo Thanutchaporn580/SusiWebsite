@@ -1,6 +1,8 @@
 import flask
 import models
 import forms
+from forms import DiaryEntryForm
+from flask import flash
 from flask_login import login_required, login_user, logout_user, LoginManager
 from flask import render_template, redirect, url_for
 import acl
@@ -42,10 +44,11 @@ def login():
     user = models.User.query.filter_by(username=form.username.data).first()
     if user and user.authenticate(form.password.data):
         login_user(user)
+        flash("Login successful!", "success")  # เพิ่มflash message
         return redirect(url_for("index"))
 
-    return redirect(url_for("login", error="Invalid username or password"))
-
+    flash("Invalid username or password", "error")  # เพิ่มflash message
+    return redirect(url_for("login"))
 
 # หน้าออกจากระบบ
 @app.route("/logout")
@@ -78,6 +81,20 @@ def register():
 
     return redirect(url_for("index"))
 
+@app.route("/diary/create", methods=["GET", "POST"])
+@login_required
+def create_diary_entry():
+    form = DiaryEntryForm()
+    
+    if form.validate_on_submit():
+        diary_entry = models.DiaryEntry()  # สร้างโมเดลสำหรับไดอารี่
+        form.populate_obj(diary_entry)  # เติมข้อมูลจากฟอร์มลงในโมเดล
+        models.db.session.add(diary_entry)  # เพิ่มโมเดลลงใน session
+        models.db.session.commit()  # บันทึกข้อมูลลงฐานข้อมูล
+        
+        return redirect(url_for("index"))  # เปลี่ยนเส้นทางไปยังหน้า index
+    
+    return render_template("create_diary.html", form=form)  # แสดงฟอร์มให้ผู้ใช้กรอกข้อมูล
 
 @app.route("/page")
 @acl.roles_required("admin")

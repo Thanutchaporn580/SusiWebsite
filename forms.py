@@ -30,7 +30,7 @@ class RegisterForm(BaseUserForm):
     )
 
 
-# ฟอร์มสำหรับโน้ต
+# ฟอร์มสำหรับไดอารี่
 class TagListField(Field):
     widget = widgets.TextInput()
 
@@ -96,3 +96,9 @@ class UploadForm(BaseUploadForm):
             file.FileAllowed(["png", "jpg", "jpeg"], "You can use onlyjpg , png"),
         ],
     )
+
+# ฟอร์มสำหรับการสร้างไดอารี่
+class DiaryEntryForm(FlaskForm):
+    title = fields.StringField("Title", [validators.DataRequired()])
+    content = fields.TextAreaField("Content", [validators.DataRequired()])
+    tags = TagListField("Tags")  # ใช้ TagListField สำหรับแท็กในไดอารี่
