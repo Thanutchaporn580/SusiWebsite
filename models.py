@@ -69,7 +69,11 @@ class User(db.Model, UserMixin):
         self._password_hash = password_hash.decode("utf-8")
 
     def authenticate(self, password):
-        return bcrypt.check_password_hash(self._password_hash, password.encode("utf-8"))
+        try:
+            return bcrypt.check_password_hash(self._password_hash, password.encode("utf-8"))
+        except Exception as e:
+        # Log the error or handle it appropriately
+            return False
 
     def has_role(self, role_name):
         return any(role.name == role_name for role in self.roles)
