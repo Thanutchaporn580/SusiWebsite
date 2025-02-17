@@ -2,8 +2,9 @@ import flask
 import models
 import forms
 from forms import DiaryEntryForm
+from flask import flash
 from flask_login import login_required, login_user, logout_user, LoginManager
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for
 import acl
 from flask import Response, send_file, abort
 

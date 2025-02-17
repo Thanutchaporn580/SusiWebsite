@@ -1,0 +1,37 @@
+body {
+    background-color: #f4f4f4; /* สีพื้นหลัง */
+    color: #333; /* สีตัวอักษร */
+    font-family: Arial, sans-serif;
+}
+
+h1, h2, h3 {
+    color: #007bff; /* สีหัวข้อ */
+}
+
+.custom-form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.custom-form input,
+.custom-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.custom-form button {
+    background: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.custom-form button:hover {
+    background: #0056b3;
+}
