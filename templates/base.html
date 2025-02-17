@@ -18,6 +18,11 @@
     <div class="mx-auto order-0">
         <a class="navbar-brand mx-auto" href="{{ url_for('index') }}">Daily Diary Journal</a>
     </div>
+    <div class="navbar-nav">
+        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+        <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+        <a class="nav-link" href="{{ url_for('create_note') }}">Create Note</a>
+    </div>
 </nav>
 <div class="container">
     {% block body %}

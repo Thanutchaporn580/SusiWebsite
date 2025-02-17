@@ -49,6 +49,7 @@ def login():
     flash("Invalid username or password", "error")  # เพิ่มflash message
     return redirect(url_for("login"))
 
+
 # หน้าออกจากระบบ
 @app.route("/logout")
 @login_required
@@ -80,20 +81,34 @@ def register():
 
     return redirect(url_for("index"))
 
+
 @app.route("/diary/create", methods=["GET", "POST"])
 @login_required
 def create_diary_entry():
     form = DiaryEntryForm()
-    
+
     if form.validate_on_submit():
         diary_entry = models.DiaryEntry()  # สร้างโมเดลสำหรับไดอารี่
         form.populate_obj(diary_entry)  # เติมข้อมูลจากฟอร์มลงในโมเดล
         models.db.session.add(diary_entry)  # เพิ่มโมเดลลงใน session
         models.db.session.commit()  # บันทึกข้อมูลลงฐานข้อมูล
-        
+
         return redirect(url_for("index"))  # เปลี่ยนเส้นทางไปยังหน้า index
-    
+
     return render_template("create_diary.html", form=form)  # แสดงฟอร์มให้ผู้ใช้กรอกข้อมูล
+
+
+@app.route("/note")
+def note():
+    db = models.db
+    notes = db.session.execute(
+        db.select(models.Note).order_by(models.Note.title)
+    ).scalars()
+    return flask.render_template(
+        "note.html",
+        notes=notes,
+    )
+
 
 @app.route("/page")
 @acl.roles_required("admin")
@@ -159,6 +174,7 @@ def delete_tags(tag_id):  # ลบ Tags ได้อย่างเดียว
 
 
 @app.route("/create_note", methods=["GET", "POST"])
+@login_required
 def create_note():
     form = forms.NoteForm()
     if not form.validate_on_submit():
