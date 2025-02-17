@@ -158,7 +158,7 @@ def delete_tags(tag_id):  # ลบ Tags ได้อย่างเดียว
     return flask.redirect(flask.url_for("index"))
 
 
-@app.route("/notes/create_note", methods=["GET", "POST"])
+@app.route("/create_note", methods=["GET", "POST"])
 def create_note():
     form = forms.NoteForm()
     if not form.validate_on_submit():
