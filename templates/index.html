@@ -1,8 +1,17 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Diary Journal</title>
+    <!-- ลิงก์ไปยัง Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+</head>
+<body class="d-flex justify-content-center align-items-center" style="height: 100vh; background-color: #ffe4fe;">
+    <div class="text-center">
+        <h1>Welcome to Your Diary</h1>
+        <a class="btn btn-primary mt-3" href="{{ url_for('note') }}">Start Creating Diary</a>
+    </div>
+</body>
+</html>
 
-{% block body %}
-<div class="container text-center" style="padding-top: 2em;">
-    <h1>Welcome to Susi's Diary</h1>
-    <a class="btn btn-primary" href="{{ url_for('note') }}">Start Creating Diary</a>
-</div>
-{% endblock %}
