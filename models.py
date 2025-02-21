@@ -52,13 +52,13 @@ class Role(db.Model):
 class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, unique=True, nullable=False)
-    email = db.Column(db.String, unique=True, nullable=False)
-    name = db.Column(db.String)
-    status = db.Column(db.String, default="active")
-    password_hash = db.Column(db.String, nullable=False)
-    created_date = mapped_column(sa.DateTime(timezone=True), server_default=func.now())
-    updated_date = mapped_column(sa.DateTime(timezone=True), server_default=func.now())
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    name = db.Column(db.String(150))
+    status = db.Column(db.String(50), default="active")
+    password_hash = db.Column(db.String(150), nullable=False)
+    created_date = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_date = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
     roles: Mapped[list[Role]] = relationship("Role", secondary="user_roles")
 
