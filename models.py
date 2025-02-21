@@ -8,6 +8,9 @@ from flask_bcrypt import Bcrypt
 from flask_login import UserMixin
 import sqlalchemy as sa
 from acl import init_acl
+from itsdangerous import URLSafeTimedSerializer as Serializer
+from flask import current_app
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # สร้าง instance ของ SQLAlchemy
 bcrypt = Bcrypt()
@@ -50,33 +53,44 @@ class User(db.Model, UserMixin):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False)
     name = db.Column(db.String)
     status = db.Column(db.String, default="active")
-    _password_hash = db.Column(db.String)
+    password_hash = db.Column(db.String, nullable=False)
     created_date = mapped_column(sa.DateTime(timezone=True), server_default=func.now())
     updated_date = mapped_column(sa.DateTime(timezone=True), server_default=func.now())
 
     roles: Mapped[list[Role]] = relationship("Role", secondary="user_roles")
 
     # Password hash management
-    @hybrid_property
-    def password_hash(self):
-        raise Exception("Password hashes may not be viewed.")
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
 
-    @password_hash.setter
-    def password_hash(self, password):
-        password_hash = bcrypt.generate_password_hash(password.encode("utf-8"))
-        self._password_hash = password_hash.decode("utf-8")
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
     def authenticate(self, password):
         try:
-            return bcrypt.check_password_hash(self._password_hash, password.encode("utf-8"))
+            return bcrypt.check_password_hash(self.password_hash, password.encode("utf-8"))
         except Exception as e:
         # Log the error or handle it appropriately
             return False
 
     def has_role(self, role_name):
         return any(role.name == role_name for role in self.roles)
+
+    def get_reset_password_token(self, expires_in=600):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        return s.dumps({'user_id': self.id}, salt='password-reset-salt')
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token, salt='password-reset-salt', max_age=600)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
 
 # โมเดล Tag

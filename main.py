@@ -6,10 +6,21 @@ from flask_login import login_required, login_user, logout_user, LoginManager
 from flask import render_template, redirect, url_for, flash
 import acl
 from flask import Response, send_file, abort
+from flask_mail import Mail, Message
 
 app = flask.Flask(__name__)
 app.config["SECRET_KEY"] = "This is secret key"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
+
+# Mail configuration
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_USERNAME"] = "your-email@gmail.com"
+app.config["MAIL_PASSWORD"] = "your-email-password"
+app.config["MAIL_DEFAULT_SENDER"] = "your-email@gmail.com"
+
+mail = Mail(app)
 models.init_app(app)
 
 
@@ -308,6 +319,40 @@ def get_image(file_id):
             "Content-Type": "application/octet-stream",
         },
     )
+
+
+@app.route("/forgot_password", methods=["GET", "POST"])
+def forgot_password():
+    form = forms.ForgotPasswordForm()
+    if form.validate_on_submit():
+        user = models.User.query.filter_by(email=form.email.data).first()
+        if user:
+            # ส่งอีเมลสำหรับรีเซ็ตรหัสผ่าน
+            token = user.get_reset_password_token()  # คุณต้องสร้างฟังก์ชันนี้ในโมเดล User
+            reset_url = url_for('reset_password', token=token, _external=True)
+            msg = Message("Password Reset Request",
+                          recipients=[user.email])
+            msg.body = f"To reset your password, visit the following link: {reset_url}"
+            mail.send(msg)
+            flash("Password reset link has been sent to your email.", "success")
+        else:
+            flash("Email not found.", "error")
+        return redirect(url_for("login"))
+    return render_template("forgot_password.html", form=form)
+
+
+@app.route("/reset_password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    user = models.User.verify_reset_password_token(token)
+    if not user:
+        return redirect(url_for('index'))
+    form = forms.ResetPasswordForm()
+    if form.validate_on_submit():
+        user.password_hash = form.password.data
+        models.db.session.commit()
+        flash("Your password has been reset.", "success")
+        return redirect(url_for('login'))
+    return render_template('reset_password.html', form=form)
 
 
 if __name__ == "__main__":

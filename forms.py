@@ -3,6 +3,8 @@ from flask_wtf import FlaskForm
 from wtforms import Field, widgets, validators, fields
 import models
 from flask_wtf import FlaskForm, file
+from wtforms import StringField, SubmitField, PasswordField
+from wtforms.validators import DataRequired, Email, EqualTo
 
 # ฟอร์มการลงทะเบียนและเข้าสู่ระบบ
 BaseUserForm = model_form(
@@ -28,6 +30,18 @@ class RegisterForm(BaseUserForm):
     name = fields.StringField(
         "Name", [validators.DataRequired(), validators.Length(min=6)]
     )
+
+
+class ForgotPasswordForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Submit')
+
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('New Password', validators=[DataRequired()])
+    password2 = PasswordField(
+        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Request Password Reset')
 
 
 # ฟอร์มสำหรับไดอารี่
