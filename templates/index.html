@@ -1,63 +1,109 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Diary Journal</title>
+    
     <!-- ลิงก์ไปยัง Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    
     <!-- ลิงก์ไปยังฟอนต์จาก Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display&display=swap" rel="stylesheet">
+    
     <!-- ลิงก์ไปยัง favicon -->
     <link rel="icon" href="{{ url_for('static', filename='favicon(1).ico') }}" type="image/x-icon">
-    <style>
+
+<style>
         body {
             background-color: #ffe4fe;
             background-image: url("{{ url_for('static', filename='background.jpg') }}");
             background-size: cover;
             background-position: center;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Poppins', sans-serif; /* ใช้ฟอนต์ Poppins */
+			height :100vh ;
+			display:flex ;
+			flex-direction :column ;
+			align-items:center ;/* จัดแนวตามแนวนอน */
+            
+			font-family:'Poppins', sans-serif;
+
         }
-        .container {
-            text-align: center;
-            background: white;
-            padding: 20px; /* ปรับความกว้างของ padding */
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
+        
         .header {
-            margin-bottom: 20px; /* เพิ่ม margin-bottom เพื่อเว้นระยะห่าง */
-            text-align: center;
+		    margin-top :150px ;/* เว้นระยะห่างจากด้านบน */
+
+	    }
+
+	    h1{
+	        font-family:'Playfair Display', serif; /* เปลี่ยนเป็น Playfair Display */
+	        color:#af3570;/* สีหัวข้อ */
+	        font-weight:bold;/* ความหนาของฟอนต์ของหัวข้อ */
+
+	    }
+
+	    p{
+	        color:#555;/* สีข้อความ */
+
+	    }
+
+	    .btn-primary{
+	        background-color:#ff69b4;/* สีพื้นฐานสำหรับปุ่ม CTA */
+	        border-color:#ff69b4;
+
+	    }
+
+	    .btn-primary:hover{
+	        background-color:#ff1493;/* สีเมื่อมีการโฮเวอร์ทาบปุ่ม CTA */
+	        border-color:#ff1493;
+
+	    }
+		
+		.container {
+		    max-width :500px ;/* กำหนดความกว้างสูงสุดของ container */
+		    text-align:center ;/* จัดแนวข้อความเป็นศูนย์กลางภายใน container */
+
+		}
+		
+		.suggestions { /* คลาสใหม่สำหรับคำแนะนำเพิ่มเติม */
+		    margin-bottom :70px ; /* เพิ่มระยะห่างระหว่างคำแนะนำและปุ่ม Start Creating Diary */
+		    
+		}
+		
+        .additional-tip { /* คลาสใหม่สำหรับคำแนะนำเพิ่มเติมที่สอง */
+            margin-bottom: 30px; /* เว้นระยะห่างระหว่างคำแนะนำและปุ่ม Start Creating Diary โดยเฉพาะสำหรับส่วนนี้*/
+            
         }
-        .btn-primary {
-            background-color: #ff69b4;
-            border-color: #ff69b4;
-        }
-        .btn-primary:hover {
-            background-color: #ff1493;
-            border-color: #ff1493;
-        }
-        h1 {
-            color: #af3570;
-            font-weight: 600; /* ใช้น้ำหนักฟอนต์ที่ต้องการ */
-        }
-        p {
-            color: #555;
-        }
-    </style>
+</style>
+
 </head>
+
 <body>
-    <div class="header">
-        <h1>Welcome to Diary Journal</h1>
+
+<div class = "header">
+
+<h1>Welcome to Diary Journal</h1>
+
+</div>
+
+<div class = "container mt-5"> 
+
+<p class = "lead">Your personal space to jot down your thoughts and memories.</p>
+
+<div class = "suggestions"> 
+    <p style ="color:green;">Learn general tips on how to write a diary!</p> 
+    <p style ="color:green;">Explore articles about planning your future through journaling!</p> 
     </div>
-    <div class="container">
-        <p class="lead">Your personal space to jot down your thoughts and memories.</p>
-        <a class="btn btn-primary mt-3" href="{{ url_for('note') }}">Start Creating Diary</a>
+    
+    <div class = "additional-tip"> 
+    <p style ="color:rgb(73, 76, 28);">Discover how journaling can help save your thoughts!</p> 
     </div>
+
+<a class = "btn btn-primary mt-0" href="{{ url_for('note') }}">Start Creating Diary</a> 
+
+<!-- คำแนะนำจบ -->
+
+</div> 
+
+<script src="{{url_for('static',filename='script.js')}}"></script><!-- หากจำเป็นต้องใส่ script -->
+
 </body>
-</html>
