@@ -3,8 +3,8 @@ from flask_wtf import FlaskForm
 from wtforms import Field, widgets, validators, fields
 import models
 from flask_wtf import FlaskForm, file
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, Email, EqualTo
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, EqualTo
 
 # ฟอร์มการลงทะเบียนและเข้าสู่ระบบ
 BaseUserForm = model_form(
@@ -20,28 +20,13 @@ class LoginForm(FlaskForm):
     password = fields.PasswordField("Password", [validators.DataRequired()])
 
 
-class RegisterForm(BaseUserForm):
-    username = fields.StringField(
-        "Username", [validators.DataRequired(), validators.Length(min=6)]
-    )
-    password = fields.PasswordField(
-        "Password", [validators.DataRequired(), validators.Length(min=6)]
-    )
-    name = fields.StringField(
-        "Name", [validators.DataRequired(), validators.Length(min=6)]
-    )
-
-
-class ForgotPasswordForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    submit = SubmitField('Submit')
-
-
-class ResetPasswordForm(FlaskForm):
-    password = PasswordField('New Password', validators=[DataRequired()])
+class RegisterForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Request Password Reset')
+    submit = SubmitField('Register')
 
 
 # ฟอร์มสำหรับไดอารี่
