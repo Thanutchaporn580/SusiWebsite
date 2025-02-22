@@ -37,11 +37,13 @@ def login():
             flash("Invalid username or password", "error")
     return render_template("login.html", form=form)
 
-@app.route("/logout")
+@app.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
-    logout_user()
-    return redirect(url_for("index"))
+    if flask.request.method == "POST":
+        logout_user()
+        return redirect(url_for("index"))
+    return render_template("logout.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
