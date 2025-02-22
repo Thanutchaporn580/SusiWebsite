@@ -29,9 +29,8 @@ def roles_required(*roles):
             if not current_user.is_authenticated:
                 raise Unauthorized("You must be logged in to access this resource.")
 
-            # ตรวจสอบบทบาทของผู้ใช้
-            user_roles = {role.name for role in current_user.roles}
-            if any(role in user_roles for role in roles):
+            # ตรวจสอบบทบาทของผู้ใช้โดยใช้เมธอด has_role
+            if any(current_user.has_role(role) for role in roles):
                 return func(*args, **kwargs)
 
             # หากไม่มีบทบาทที่ตรงกัน
@@ -40,3 +39,4 @@ def roles_required(*roles):
         return wrapped
 
     return wrapper
+
