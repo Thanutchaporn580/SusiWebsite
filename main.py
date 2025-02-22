@@ -6,21 +6,10 @@ from flask_login import login_required, login_user, logout_user, LoginManager
 from flask import render_template, redirect, url_for, flash
 import acl
 from flask import Response, send_file, abort
-from flask_mail import Mail, Message
 
 app = flask.Flask(__name__)
 app.config["SECRET_KEY"] = "This is secret key"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-
-# Mail configuration
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = "your-email@gmail.com"
-app.config["MAIL_PASSWORD"] = "your-email-password"
-app.config["MAIL_DEFAULT_SENDER"] = "your-email@gmail.com"
-
-mail = Mail(app)
 models.init_app(app)
 
 @app.route("/")
@@ -60,10 +49,14 @@ def register():
     if form.validate_on_submit():
         user = models.User(
             username=form.username.data,
-            email=form.email.data,
             name=form.name.data,
-            password_hash=form.password.data,
         )
+        user.set_password(form.password.data)
+        role = models.Role.query.filter_by(name="user").first()
+        if not role:
+            role = models.Role(name="user")
+            models.db.session.add(role)
+        user.roles.append(role)
         models.db.session.add(user)
         models.db.session.commit()
         flash("Registration successful", "success")
@@ -88,7 +81,11 @@ def create_diary_entry():
 
 @app.route("/note")
 def note():
-    return render_template("note.html")
+    db = models.db
+    notes = db.session.execute(
+        db.select(models.Note).order_by(models.Note.title)
+    ).scalars()
+    return render_template("note.html", notes=notes)
 
 @app.route("/page")
 @acl.roles_required("admin")
@@ -102,42 +99,113 @@ def page2():
 
 @app.route("/tags/<tag_name>")
 def tags_view(tag_name):
-    return render_template("tags_view.html", tag_name=tag_name)
+    db = models.db
+    tag = (
+        db.session.execute(db.select(models.Tag).where(models.Tag.name == tag_name))
+        .scalars()
+        .first()
+    )
+    notes = db.session.execute(
+        db.select(models.Note).where(models.Note.tags.any(id=tag.id))
+    ).scalars()
+    return render_template("tags_view.html", tag_name=tag_name, notes=notes)
 
 @app.route("/tags/<tag_id>/update_tags", methods=["GET", "POST"])
 def update_tags(tag_id):
-    return render_template("update_tags.html", tag_id=tag_id)
+    db = models.db
+    tag = (
+        db.session.execute(db.select(models.Tag).where(models.Tag.id == tag_id))
+        .scalars()
+        .first()
+    )
+    form = forms.TagsForm()
+    form_name = tag.name
+    if form.validate_on_submit():
+        form.populate_obj(tag)
+        db.session.commit()
+        return redirect(url_for("index"))
+    return render_template("update_tags.html", form=form, form_name=form_name)
 
 @app.route("/tags/<tag_id>/delete_tags", methods=["GET", "POST"])
 def delete_tags(tag_id):
-    return render_template("delete_tags.html", tag_id=tag_id)
+    db = models.db
+    tag = (
+        db.session.execute(db.select(models.Tag).where(models.Tag.id == tag_id))
+        .scalars()
+        .first()
+    )
+    db.session.delete(tag)
+    db.session.commit()
+    return redirect(url_for("index"))
 
 @app.route("/create_note", methods=["GET", "POST"])
 @login_required
 def create_note():
-    return render_template("create_note.html")
+    db = models.db
+    form = forms.NoteForm()
+    if form.validate_on_submit():
+        note = models.Note()
+        form.populate_obj(note)
+        note.tags = []
+        for tag_name in form.tags.data:
+            tag = (
+                db.session.execute(db.select(models.Tag).where(models.Tag.name == tag_name))
+                .scalars()
+                .first()
+            )
+            if not tag:
+                tag = models.Tag(name=tag_name)
+                db.session.add(tag)
+            note.tags.append(tag)
+        db.session.add(note)
+        db.session.commit()
+        return redirect(url_for("note"))
+    return render_template("create_note.html", form=form)
 
 @app.route("/tags/<tag_id>/update_note", methods=["GET", "POST"])
 def update_note(tag_id):
-    return render_template("update_note.html", tag_id=tag_id)
-
-@app.route("/tags/<tag_id>/delete_note", methods=["GET", "POST"])
-def delete_note(tag_id):
-    return render_template("delete_note.html", tag_id=tag_id)
-
-@app.route("/tags/<tag_id>/delete", methods=["GET", "POST"])
-def delete(tag_id):
     db = models.db
-    notes = (
+    note = (
         db.session.execute(
             db.select(models.Note).where(models.Note.tags.any(id=tag_id))
         )
         .scalars()
         .first()
     )
-    db.session.delete(notes)
+    form = forms.NoteForm()
+    if form.validate_on_submit():
+        form.populate_obj(note)
+        db.session.commit()
+        return redirect(url_for("index"))
+    return render_template("update_note.html", form=form, note=note)
+
+@app.route("/tags/<tag_id>/delete_note", methods=["GET", "POST"])
+def delete_note(tag_id):
+    db = models.db
+    note = (
+        db.session.execute(
+            db.select(models.Note).where(models.Note.tags.any(id=tag_id))
+        )
+        .scalars()
+        .first()
+    )
+    db.session.delete(note)
     db.session.commit()
-    return flask.redirect(flask.url_for("index"))
+    return redirect(url_for("index"))
+
+@app.route("/tags/<tag_id>/delete", methods=["GET", "POST"])
+def delete(tag_id):
+    db = models.db
+    note = (
+        db.session.execute(
+            db.select(models.Note).where(models.Note.tags.any(id=tag_id))
+        )
+        .scalars()
+        .first()
+    )
+    db.session.delete(note)
+    db.session.commit()
+    return redirect(url_for("index"))
 
 @app.route("/images")
 def images():
@@ -145,38 +213,28 @@ def images():
     images = db.session.execute(
         db.select(models.Upload).order_by(models.Upload.filename)
     ).scalars()
-    return flask.render_template(
-        "images.html",
-        images=images,
-    )
+    return render_template("images.html", images=images)
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
     form = forms.UploadForm()
     db = models.db
     file_ = models.Upload()
-    if not form.validate_on_submit():
-        return flask.render_template(
-            "upload.html",
-            form=form,
-        )
-    if form.file.data:
+    if form.validate_on_submit():
         file_ = models.Upload(
             filename=form.file.data.filename,
-            data=form.file.data.read(),  # Read binary data
+            data=form.file.data.read(),
         )
-    db.session.add(file_)
-    db.session.commit()
-    return flask.redirect(flask.url_for("index"))
+        db.session.add(file_)
+        db.session.commit()
+        return redirect(url_for("index"))
+    return render_template("upload.html", form=form)
 
 @app.route("/upload/<int:file_id>", methods=["GET"])
 def get_image(file_id):
-    # Query the database for the file with the given file_id
     file_ = models.Upload.query.get(file_id)
     if not file_ or not file_.data:
-        # Return 404 if file is not found
         abort(404, description="File not found")
-    # Serve the binary data as a file
     return Response(
         file_.data,
         headers={
