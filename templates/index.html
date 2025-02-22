@@ -13,8 +13,12 @@
     <style>
         body {
             background-color: #ffe4fe;
+            background-image: url("{{ url_for('static', filename='background.jpg') }}");
+            background-size: cover;
+            background-position: center;
             height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             font-family: 'Poppins', sans-serif; /* ใช้ฟอนต์ Poppins */
@@ -22,9 +26,13 @@
         .container {
             text-align: center;
             background: white;
-            padding: 30px;
+            padding: 20px; /* ปรับความกว้างของ padding */
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            margin-bottom: 20px; /* เพิ่ม margin-bottom เพื่อเว้นระยะห่าง */
+            text-align: center;
         }
         .btn-primary {
             background-color: #ff69b4;
@@ -35,7 +43,7 @@
             border-color: #ff1493;
         }
         h1 {
-            color: #ff69b4;
+            color: #af3570;
             font-weight: 600; /* ใช้น้ำหนักฟอนต์ที่ต้องการ */
         }
         p {
@@ -44,8 +52,10 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="header">
         <h1>Welcome to Diary Journal</h1>
+    </div>
+    <div class="container">
         <p class="lead">Your personal space to jot down your thoughts and memories.</p>
         <a class="btn btn-primary mt-3" href="{{ url_for('note') }}">Start Creating Diary</a>
     </div>
