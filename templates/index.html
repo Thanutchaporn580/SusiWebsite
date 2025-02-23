@@ -20,58 +20,48 @@
             background-image: url("{{ url_for('static', filename='background.jpg') }}");
             background-size: cover;
             background-position: center;
-			height :100vh ;
-			display:flex ;
-			flex-direction :column ;
-			align-items:center ;/* จัดแนวตามแนวนอน */
-            
-			font-family:'Poppins', sans-serif;
-
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* จัดแนวตามแนวนอน */
+            font-family: 'Poppins', sans-serif;
         }
         
         .header {
-		    margin-top :150px ;/* เว้นระยะห่างจากด้านบน */
+            margin-top: 150px; /* เว้นระยะห่างจากด้านบน */
+        }
 
-	    }
+        h1 {
+            font-family: 'Playfair Display', serif; /* เปลี่ยนเป็น Playfair Display */
+            color: #af3570; /* สีหัวข้อ */
+            font-weight: bold; /* ความหนาของฟอนต์ของหัวข้อ */
+        }
 
-	    h1{
-	        font-family:'Playfair Display', serif; /* เปลี่ยนเป็น Playfair Display */
-	        color:#af3570;/* สีหัวข้อ */
-	        font-weight:bold;/* ความหนาของฟอนต์ของหัวข้อ */
+        p {
+            color: #555; /* สีข้อความ */
+        }
 
-	    }
+        .btn-primary {
+            background-color: #ff69b4; /* สีพื้นฐานสำหรับปุ่ม CTA */
+            border-color: #ff69b4;
+        }
 
-	    p{
-	        color:#555;/* สีข้อความ */
-
-	    }
-
-	    .btn-primary{
-	        background-color:#ff69b4;/* สีพื้นฐานสำหรับปุ่ม CTA */
-	        border-color:#ff69b4;
-
-	    }
-
-	    .btn-primary:hover{
-	        background-color:#ff1493;/* สีเมื่อมีการโฮเวอร์ทาบปุ่ม CTA */
-	        border-color:#ff1493;
-
-	    }
-		
-		.container {
-		    max-width :500px ;/* กำหนดความกว้างสูงสุดของ container */
-		    text-align:center ;/* จัดแนวข้อความเป็นศูนย์กลางภายใน container */
-
-		}
-		
-		.suggestions { /* คลาสใหม่สำหรับคำแนะนำเพิ่มเติม */
-		    margin-bottom :70px ; /* เพิ่มระยะห่างระหว่างคำแนะนำและปุ่ม Start Creating Diary */
-		    
-		}
-		
+        .btn-primary:hover {
+            background-color: #ff1493; /* สีเมื่อมีการโฮเวอร์ทาบปุ่ม CTA */
+            border-color: #ff1493;
+        }
+        
+        .container {
+            max-width: 500px; /* กำหนดความกว้างสูงสุดของ container */
+            text-align: center; /* จัดแนวข้อความเป็นศูนย์กลางภายใน container */
+        }
+        
+        .suggestions { /* คลาสใหม่สำหรับคำแนะนำเพิ่มเติม */
+            margin-bottom: 70px; /* เพิ่มระยะห่างระหว่างคำแนะนำและปุ่ม Start Creating Diary */
+        }
+        
         .additional-tip { /* คลาสใหม่สำหรับคำแนะนำเพิ่มเติมที่สอง */
-            margin-bottom: 30px; /* เว้นระยะห่างระหว่างคำแนะนำและปุ่ม Start Creating Diary โดยเฉพาะสำหรับส่วนนี้*/
-            
+            margin-bottom: 30px; /* เว้นระยะห่างระหว่างคำแนะนำและปุ่ม Start Creating Diary โดยเฉพาะสำหรับส่วนนี้ */
         }
 </style>
 
@@ -79,31 +69,24 @@
 
 <body>
 
-<div class = "header">
-
-<h1>Welcome to Diary Journal</h1>
-
+<div class="header">
+    <h1>Welcome to Diary Journal</h1>
 </div>
 
-<div class = "container mt-5"> 
+<div class="container mt-5"> 
+    <p class="lead">Your personal space to jot down your thoughts and memories.</p>
 
-<p class = "lead">Your personal space to jot down your thoughts and memories.</p>
-
-<div class = "suggestions"> 
-    <p style ="color:green;">Learn general tips on how to write a diary!</p> 
-    <p style ="color:green;">Explore articles about planning your future through journaling!</p> 
+    <div class="suggestions"> 
+        <p style="color:green;">Learn general tips on how to write a diary!</p> 
+        <p style="color:green;">Explore articles about planning your future through journaling!</p> 
     </div>
     
-    <div class = "additional-tip"> 
-    <p style ="color:rgb(73, 76, 28);">Discover how journaling can help save your thoughts!</p> 
+    <div class="additional-tip"> 
+        <p style="color:rgb(73, 76, 28);">Discover how journaling can help save your thoughts!</p> 
     </div>
 
-<a class = "btn btn-primary mt-0" href="{{ url_for('note') }}">Start Creating Diary</a> 
-
-<!-- คำแนะนำจบ -->
-
+    <a class="btn btn-primary mt-0" href="{{ url_for('note') }}">Start Creating Diary</a> 
 </div> 
 
-<script src="{{url_for('static',filename='script.js')}}"></script><!-- หากจำเป็นต้องใส่ script -->
-
 </body>
+</html>
