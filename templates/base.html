@@ -14,15 +14,18 @@
             crossorigin="anonymous"></script>
 </head>
 <body>
-<nav class="navbar navbar-dark bg-dark text-center">
-    <div class="mx-auto order-0">
+<nav class="navbar navbar-dark bg-dark">
+    <!-- ใช้ ms-0 เพื่อให้ปุ่มอยู่ติดขอบซ้าย -->
+    <div class="navbar-nav ms-0">
+        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+        <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+    </div>
+    <div class="mx-auto">
         <a class="navbar-brand mx-auto" href="{{ url_for('index') }}">Daily Diary Journal</a>
     </div>
     <div class="navbar-nav">
-        <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-        <a class="nav-link" href="{{ url_for('register') }}">Register</a>
         <a class="nav-link" href="{{ url_for('create_note') }}">Create Note</a>
-        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
         <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
         <a class="nav-link" href="{{ url_for('description') }}">Description</a>
         <a class="nav-link" href="{{ url_for('faq') }}">Get help</a>
