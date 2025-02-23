@@ -3,7 +3,7 @@ import models
 import forms
 from forms import DiaryEntryForm
 from flask_login import login_required, login_user, logout_user, LoginManager
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, abort
 import acl
 from flask import Response, send_file, abort
 
@@ -107,10 +107,12 @@ def tags_view(tag_name):
         .scalars()
         .first()
     )
+    if not tag:
+        abort(404, description="Tag not found")
     notes = db.session.execute(
         db.select(models.Note).where(models.Note.tags.any(id=tag.id))
     ).scalars()
-    return render_template("tags_view.html", tag_name=tag_name, notes=notes)
+    return render_template("tag_view.html", tag_name=tag_name, notes=notes)
 
 @app.route("/tags/<tag_id>/update_tags", methods=["GET", "POST"])
 def update_tags(tag_id):
@@ -244,6 +246,17 @@ def get_image(file_id):
             "Content-Type": "application/octet-stream",
         },
     )
+
+@app.route("/score", methods=["GET", "POST"])
+@login_required
+def score():
+    form = RatingForm()
+    if form.validate_on_submit():
+        rating = form.rating.data
+        # บันทึกคะแนนลงในฐานข้อมูลหรือไฟล์
+        flash("Thank you for your rating!", "success")
+        return redirect(url_for("note"))
+    return render_template("score.html", form=form)
 
 if __name__ == "__main__":
     app.run(debug=True)
