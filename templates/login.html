@@ -1,22 +1,31 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<h3 class="my-2">Loing</h3>
-<form action="" method="POST">
-{{ form.hidden_tag() }}
-<div class="form-group my-3">
-{{ form.username.label }}
-{{ form.username(class_='form-control',value=form_name) }}
+<!-- เริ่มต้น login-page และใส่ background-image -->
+<div class="login-page" style="background-image: url('{{ url_for('static', filename='background-login.jpg') }}'); 
+    background-size: cover; background-position: center; min-height: 100vh; display: flex; 
+    justify-content: center; align-items: center;">
+    
+    <div class="card p-4 shadow" style="width: 350px; background: rgba(255, 255, 255, 0.8); border-radius: 10px;">
+        <h3 class="text-center mb-3">Login</h3>
+        <form action="" method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group mb-3">
+                {{ form.username.label }}
+                {{ form.username(class_='form-control', value=form_name) }}
+            </div>
+            <div class="form-group mb-3">
+                {{ form.password.label }}
+                {{ form.password(class_='form-control', value=form_name) }}
+            </div>
+            {% if request.args.get('error') %}
+                <div>
+                    <p class="text-danger"> {{ request.args.get('error') }} </p>
+                </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+    </div>
 </div>
-<div class="form-group my-3">
-{{ form.password.label }}
-{{ form.password(class_='form-control',value=form_name) }}
-</div>
-{% if request.args.get('error') %}
-<div>
-<p class="text-danger"> {{ request.args.get('error') }} </p>
-</div>
-{% endif %}
-<button type="submit" class="btn btn-primary">Update</button>
-</form>
 {% endblock %}
+
