@@ -251,5 +251,9 @@ def get_image(file_id):
 def contact():
     return render_template("contact.html")
 
+@app.route("/description")
+def description():
+    return render_template("description.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
