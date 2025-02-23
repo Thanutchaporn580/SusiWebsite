@@ -57,7 +57,7 @@
             {% endif %}
             {% endfor %}
             <br>
-            <small>Last update: {{ note.updated_date }}</small>
+            <small>Last update: {{ note.updated_date.strftime('%d %B %Y %H:%M:%S') }}</small>
         </div>
     </div>
 </div>
