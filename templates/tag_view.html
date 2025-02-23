@@ -5,23 +5,27 @@
 {% endblock %}
 
 {% block body %}
-  <h2>Home</h2>
+  <h2>#</h2>
 
-  <h3>{{ tag }} Notes</h3>
+  <h3>Tag name : {{ tag_name }} </h3>
 
-  {% for note in notes %}
-    <div class="note">
-      <h4>{{ note.title }}</h4>
+  {% if notes %}
+    {% for note in notes %}
+      <div class="note">
+        <h4>{{ note.title }}</h4>
 
-      <p>{{ note.description }}</p>
+        <p>{{ note.description }}</p>
 
-      <p>Tags:
-        {% for t in note.tags %}
-          <span class="tag">{{ t.name }}</span>,
-        {% endfor %}
-      </p>
+        <p>Tags:
+          {% for t in note.tags %}
+            <span class="tag">{{ t.name }}</span>{% if not loop.last %}, {% endif %}
+          {% endfor %}
+        </p>
 
-      <p>Last update: {{ note.updated_date }}</p>
-    </div>
-  {% endfor %}
+        <p>Last update: {{ note.updated_date }}</p>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No notes available for this tag.</p>
+  {% endif %}
 {% endblock %}
