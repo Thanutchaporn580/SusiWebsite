@@ -247,16 +247,9 @@ def get_image(file_id):
         },
     )
 
-@app.route("/score", methods=["GET", "POST"])
-@login_required
-def score():
-    form = RatingForm()
-    if form.validate_on_submit():
-        rating = form.rating.data
-        # บันทึกคะแนนลงในฐานข้อมูลหรือไฟล์
-        flash("Thank you for your rating!", "success")
-        return redirect(url_for("note"))
-    return render_template("score.html", form=form)
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
