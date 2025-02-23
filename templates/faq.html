@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  FAQ
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2>Frequently Asked Questions</h2>
+    
+    <div class="faq-item">
+        <button class="btn btn-link" onclick="toggleAnswer(1)">1. How do I register an account?</button>
+        <p id="answer1" style="display:none;">To register an account, click on the "Register" link in the navigation bar and fill in the required information.</p>
+    </div>
+    
+    <div class="faq-item">
+        <button class="btn btn-link" onclick="toggleAnswer(2)">2. How do I log in?</button>
+        <p id="answer2" style="display:none;">After registering, you can log in using your username and password. Click on the "Login" link in the navigation bar and enter your credentials.</p>
+    </div>
+    
+    <div class="faq-item">
+        <button class="btn btn-link" onclick="toggleAnswer(3)">3. How do I create a diary entry?</button>
+        <p id="answer3" style="display:none;">Once logged in, you can create a diary entry by clicking on the "Create Note" link. Fill in the title, description, and tags for your entry, then click "Submit".</p>
+    </div>
+    
+    <div class="faq-item">
+        <button class="btn btn-link" onclick="toggleAnswer(4)">4. How do I view my notes?</button>
+        <p id="answer4" style="display:none;">You can view all your notes by clicking on the "Note" link in the navigation bar. Each note will display its title, description, tags, and the last update date.</p>
+    </div>
+    
+    <div class="faq-item">
+        <button class="btn btn-link" onclick="toggleAnswer(5)">5. How do I update or delete a note?</button>
+        <p id="answer5" style="display:none;">To update or delete a note, click on the note you want to modify. You will see options to update or delete the note.</p>
+    </div>
+    
+    <div class="faq-item">
+        <button class="btn btn-link" onclick="toggleAnswer(6)">6. How do I contact support?</button>
+        <p id="answer6" style="display:none;">If you have any questions or need support, visit the "Contact" page for our contact information.</p>
+    </div>
+    
+    <div class="faq-item">
+        <button class="btn btn-link" onclick="toggleAnswer(7)">7. How do I upload a file?</button>
+        <p id="answer7" style="display:none;">To upload a file, click on the "Upload" link in the navigation bar. Select the file you want to upload and click "Submit".</p>
+    </div>
+    
+    <div class="faq-item">
+        <button class="btn btn-link" onclick="toggleAnswer(8)">8. How do I view uploaded images?</button>
+        <p id="answer8" style="display:none;">You can view all uploaded images by clicking on the "Images" link in the navigation bar.</p>
+    </div>
+    
+    <div class="faq-item">
+        <button class="btn btn-link" onclick="toggleAnswer(9)">9. How do I update my profile?</button>
+        <p id="answer9" style="display:none;">To update your profile, click on the "Profile" link in the navigation bar. You can update your profile picture and other information.</p>
+    </div>
+    
+    <div class="faq-item">
+        <button class="btn btn-link" onclick="toggleAnswer(10)">10. How do I log out?</button>
+        <p id="answer10" style="display:none;">To log out, click on the "Logout" link in the navigation bar.</p>
+    </div>
+</div>
+
+<script>
+function toggleAnswer(id) {
+    var answer = document.getElementById('answer' + id);
+    if (answer.style.display === 'none') {
+        answer.style.display = 'block';
+    } else {
+        answer.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}
