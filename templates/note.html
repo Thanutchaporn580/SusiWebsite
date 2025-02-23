@@ -1,6 +1,36 @@
 {% extends 'base.html' %}
 
 {% block body %}
+
+<style>
+    body {
+        font-family: Arial, sans-serif; /* เปลี่ยนฟอนต์ */
+        font-size: 16px; /* ขนาดฟอนต์ทั่วไป */
+    }
+
+    .navbar {
+        font-size: 14px; /* ขนาดฟอนต์เฉพาะสำหรับ navbar */
+    }
+
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    .blink {
+        animation: blink 1s infinite;
+        font-size: 1.5em; /* ปรับขนาดตามต้องการ */
+    }
+
+    .or-effect {
+        color: red; /* เปลี่ยนสีเป็นสีแดง */
+        font-size: 1.8em; /* ปรับขนาดตามต้องการ */
+        font-weight: bold; /* ทำให้ตัวหนา */
+    }
+</style>
+
+{% if current_user.is_authenticated %}
 <ul class="nav justify-content-center" style="padding-top: 1em;">
     <li class="nav-item">
         <a class="btn btn-primary" href="{{ url_for('create_note') }}">Create</a>
@@ -32,4 +62,12 @@
     </div>
 </div>
 {% endfor %}
+{% else %}
+<p class="text-center mt-5 blink">Register for a free online account</p>
+<p class="text-center mt-5"><span class="or-effect">Or</span></p>
+<p class="text-center mt-5 blink">Login to view your note</p>
+{% endif %}
+
+{% if notes %}
+{% endif %}
 {% endblock %}
